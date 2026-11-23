@@ -1,0 +1,16 @@
+{
+  "name": "guild-bridge",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Bridges chat between two WoW guild Discord sync channels and a shared #general.",
+  "type": "module",
+  "main": "src/bridge.js",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "start": "node --env-file-if-exists=.env src/bridge.js",
+    "discover": "node --env-file-if-exists=.env src/bridge.js --discover"
+  },
+  "dependencies": {
+    "discord.js": "^14.28.1"
+  }
+}
