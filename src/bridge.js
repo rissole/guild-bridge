@@ -38,6 +38,14 @@ const tagRe = new RegExp(
 );
 const noMentions = { parse: [] };
 
+// Blizzard posts a placeholder when an unlinked player talks in guild chat
+// ("Sent a message to guild chat but has not yet linked their Discord account.").
+// It carries no chat text, so don't relay it.
+const skipRe = new RegExp(env('SKIP_PATTERN', 'has not (yet )?linked their Discord account'), 'i');
+function isSkipped(msg) {
+  return [msg.content, ...msg.embeds.flatMap((e) => [e.title, e.description])].some((t) => t && skipRe.test(t));
+}
+
 const client = new Client({
   intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent],
 });
@@ -139,6 +147,7 @@ client.on(Events.MessageCreate, async (msg) => {
 
   if (cfg.discover && side) logDiscover(msg);
   if (tagRe.test(msg.content)) return;
+  if (side && isSkipped(msg)) return;
 
   const text = messageText(msg);
   if (!text) return;
