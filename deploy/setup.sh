@@ -27,6 +27,7 @@ ufw allow OpenSSH
 ufw --force enable
 
 id bridge &>/dev/null || useradd --system --home "$DIR" --shell /usr/sbin/nologin bridge
+git config --global --add safe.directory "$DIR"
 if [ -d "$DIR/.git" ]; then
   git -C "$DIR" pull --ff-only
 else
