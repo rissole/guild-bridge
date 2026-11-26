@@ -120,12 +120,21 @@ function logDiscover(msg) {
   );
 }
 
+async function fetchChannel(c, id, setting) {
+  try {
+    return await c.channels.fetch(id);
+  } catch (err) {
+    console.error(`Can't open channel ${id} (${setting}): ${err.message}. Give the bot View Channel there.`);
+    process.exit(1);
+  }
+}
+
 client.once(Events.ClientReady, async (c) => {
-  general = await c.channels.fetch(cfg.generalId);
-  for (const s of cfg.sides) {
-    const channel = await c.channels.fetch(s.channelId);
+  for (const [i, s] of cfg.sides.entries()) {
+    const channel = await fetchChannel(c, s.channelId, `GUILD_${'AB'[i]}_CHANNEL_ID`);
     sideChannels.set(s.channelId, { label: s.label, channel });
   }
+  general = await fetchChannel(c, cfg.generalId, 'GENERAL_CHANNEL_ID');
   const hooks = await general.fetchWebhooks();
   webhook =
     hooks.find((h) => h.owner?.id === c.user.id && h.name === WEBHOOK_NAME) ??
