@@ -136,6 +136,14 @@ client.once(Events.ClientReady, async (c) => {
   console.log(`  relay into game: ${cfg.relayIntoGame}, discover logging: ${cfg.discover}`);
 });
 
+// Discover mode: also dump the raw gateway payload, which includes fields discord.js doesn't map
+// (e.g. where the game's character-name badge lives).
+client.on(Events.Raw, (packet) => {
+  if (cfg.discover && packet.t === 'MESSAGE_CREATE' && sideChannels.has(packet.d.channel_id)) {
+    console.log('RAW ' + JSON.stringify(packet.d));
+  }
+});
+
 client.on(Events.MessageCreate, async (msg) => {
   if (!webhook) return; // not ready yet
   if (msg.system) return;
