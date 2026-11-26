@@ -51,6 +51,25 @@ npm start          # normal run
 
 ## Deploy
 
+### Ubuntu server (e.g. a DigitalOcean droplet)
+
+As root:
+
+```
+curl -fsSL https://raw.githubusercontent.com/rissole/guild-bridge/main/deploy/setup.sh | bash
+```
+
+Put your settings in `/opt/guild-bridge/.env` (`chmod 600`, owned by `bridge`), then:
+
+```
+systemctl restart guild-bridge
+journalctl -u guild-bridge -f        # live logs
+```
+
+To update later: `git -C /opt/guild-bridge pull && systemctl restart guild-bridge`.
+
+### Anywhere else
+
 Any always-on machine running Node 22 or newer works:
 
 ```

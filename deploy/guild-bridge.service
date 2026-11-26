@@ -1,0 +1,18 @@
+[Unit]
+Description=Guild Bridge Discord relay
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=bridge
+WorkingDirectory=/opt/guild-bridge
+ExecStart=/usr/bin/node --env-file=/opt/guild-bridge/.env src/bridge.js
+Restart=always
+RestartSec=10
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
